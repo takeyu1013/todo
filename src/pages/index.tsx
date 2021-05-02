@@ -1,3 +1,5 @@
+import React, { useState } from "react";
+
 const ITEMS = [
   'Get groceries after work',
   'Do amazing things!',
@@ -5,11 +7,15 @@ const ITEMS = [
 ];
 
 const Home = () => {
+  const [items, setItems] = useState(ITEMS);
+  const add = () => {
+    setItems((items) => items.concat(['Hell, word!']));
+  };
   return (
     <>
-      <button>Add Item</button>
+      <button onClick={add}>Add Item</button>
       <div>
-        {ITEMS.map((item) => {
+        {items.map((item) => {
           return <li>{item}</li>;
         })}
       </div>
