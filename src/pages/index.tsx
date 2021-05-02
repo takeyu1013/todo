@@ -1,4 +1,4 @@
-const items = [
+const ITEMS = [
   'Get groceries after work',
   'Do amazing things!',
   'Finish the Docker 101 workshop'
@@ -9,7 +9,7 @@ const Home = () => {
     <>
       <button>Add Item</button>
       <div>
-        {items.map((item) => {
+        {ITEMS.map((item) => {
           return <li>{item}</li>;
         })}
       </div>
