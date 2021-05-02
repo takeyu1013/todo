@@ -1,10 +1,18 @@
+const items = [
+  'Get groceries after work',
+  'Do amazing things!',
+  'Finish the Docker 101 workshop'
+];
+
 const Home = () => {
   return (
     <>
       <button>Add Item</button>
-      <li>Get groceries after work</li>
-      <li>Do amazing things!</li>
-      <li>Finish the Docker 101 workshop</li>
+      <div>
+        {items.map((item) => {
+          return <li>{item}</li>;
+        })}
+      </div>
     </>
   );
 };
