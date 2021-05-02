@@ -1,6 +1,11 @@
 const Home = () => {
   return (
-    <h1>Hell, Word!</h1>
+    <>
+      <button>Add Item</button>
+      <li>Get groceries after work</li>
+      <li>Do amazing things!</li>
+      <li>Finish the Docker 101 workshop</li>
+    </>
   );
 };
 
