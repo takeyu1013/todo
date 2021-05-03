@@ -9,22 +9,24 @@ const ITEMS = [
 const Home = () => {
   const [items, setItems] = useState(ITEMS);
   const add = () => {
-    setItems((items) => items.concat(['Hell, word!']));
+    setItems(items => items.concat(['Hell, word!']));
   };
   const remove = (index: number) => {
-    setItems((items) => {
-      return items.splice(index, 1);
+    setItems(items => {
+      const result = [...items];
+      result.splice(index, 1);
+      return result;
     });
   };
   return (
     <>
       <button onClick={add}>Add Item</button>
       <div>
-        {items.map((item) => {
+        {items.map((item, index) => {
           return (
             <>
-              <li key={item}>{item}</li>
-              <button onClick={undefined}>Delete</button>
+              <li key={index}>{item}</li>
+              <button onClick={remove.bind(this, index)}>Delete</button>
             </>
           );
         })}
