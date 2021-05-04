@@ -20,7 +20,7 @@ const Home = () => {
     });
   };
   const change = (event: ChangeEvent<HTMLInputElement>) => {
-    setNewItem(newItem => event.target.value);
+    setNewItem(() => event.target.value);
   };
   return (
     <>
