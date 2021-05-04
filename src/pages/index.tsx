@@ -24,8 +24,8 @@ const Home = () => {
   };
   return (
     <>
-      <input value={newItem} onChange={change} />
-      <button onClick={add}>Add Item</button>
+      <input className="px-2 py-1" value={newItem} onChange={change} />
+      <button className="px-2 py-1 rounded text-white bg-green-500 hover:bg-green-700" onClick={add}>Add Item</button>
       <div>
         {items.map((item, index) => {
           return (
