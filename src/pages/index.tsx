@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 
 const ITEMS = [
   'Get groceries after work',
@@ -8,8 +8,9 @@ const ITEMS = [
 
 const Home = () => {
   const [items, setItems] = useState(ITEMS);
+  const [newItem, setNewItem] = useState('Hell, word!');
   const add = () => {
-    setItems(items => items.concat(['Hell, word!']));
+    setItems(items => items.concat([newItem]));
   };
   const remove = (index: number) => {
     setItems(items => {
@@ -18,9 +19,12 @@ const Home = () => {
       return result;
     });
   };
+  const change = (event: ChangeEvent<HTMLInputElement>) => {
+    setNewItem(newItem => event.target.value);
+  };
   return (
     <>
-      <input />
+      <input value={newItem} onChange={change} />
       <button onClick={add}>Add Item</button>
       <div>
         {items.map((item, index) => {
