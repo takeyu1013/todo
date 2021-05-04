@@ -20,6 +20,7 @@ const Home = () => {
   };
   return (
     <>
+      <input />
       <button onClick={add}>Add Item</button>
       <div>
         {items.map((item, index) => {
