@@ -23,17 +23,17 @@ const Home = () => {
     setNewItem(() => event.target.value);
   };
   return (
-    <div className="mt-1 min-h-screen bg-gray-100">
-      <div className="mb-3">
-        <input className="px-2 py-1" value={newItem} onChange={change} />
-        <button className="px-2 py-1 rounded text-white bg-green-500 hover:bg-green-700" onClick={add}>Add Item</button>
-      </div>
-      <div className="bg-white">
+    <div className="min-h-screen bg-gray-100 pt-4">
+      <div className="mx-auto w-1/2">
+        <div className="pb-8 flex">
+          <input className="px-2 py-1 flex-auto" value={newItem} onChange={change} />
+          <button className="px-2 py-1 flex-shrink rounded text-white bg-green-500 hover:bg-green-700" onClick={add}>Add Item</button>
+        </div>
         {items.map((item, index) => {
           return (
-            <div key={index}>
-              <li>{item}</li>
-              <button onClick={remove.bind(this, index)}>Delete</button>
+            <div className="mb-4 flex" key={index}>
+              <li className="px-2 py-1 flex-auto bg-white list-none">{item}</li>
+              <button className="px-2 py-1 flex-shrink rounded text-white bg-red-500 hover:bg-red-700" onClick={remove.bind(this, index)}>Delete</button>
             </div>
           );
         })}
