@@ -23,14 +23,16 @@ const Home = () => {
     setNewItem(() => event.target.value);
   };
   return (
-    <div className="min-h-screen bg-gray-100">
-      <input className="px-2 py-1" value={newItem} onChange={change} />
-      <button className="px-2 py-1 rounded text-white bg-green-500 hover:bg-green-700" onClick={add}>Add Item</button>
-      <div>
+    <div className="mt-1 min-h-screen bg-gray-100">
+      <div className="mb-3">
+        <input className="px-2 py-1" value={newItem} onChange={change} />
+        <button className="px-2 py-1 rounded text-white bg-green-500 hover:bg-green-700" onClick={add}>Add Item</button>
+      </div>
+      <div className="bg-white">
         {items.map((item, index) => {
           return (
-            <div className="bg-white">
-              <li key={index}>{item}</li>
+            <div key={index}>
+              <li>{item}</li>
               <button onClick={remove.bind(this, index)}>Delete</button>
             </div>
           );
