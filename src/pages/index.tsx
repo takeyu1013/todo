@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useCallback, useState } from "react";
 
 const ITEMS = [
   'Get groceries after work',
@@ -9,19 +9,19 @@ const ITEMS = [
 const Home = () => {
   const [items, setItems] = useState(ITEMS);
   const [newItem, setNewItem] = useState('Hell, word!');
-  const add = () => {
+  const add = useCallback(() => {
     setItems(items => items.concat([newItem]));
-  };
-  const remove = (index: number) => {
+  }, []);
+  const remove = useCallback((index: number) => {
     setItems(items => {
       const result = [...items];
       result.splice(index, 1);
       return result;
     });
-  };
-  const change = (event: ChangeEvent<HTMLInputElement>) => {
+  }, []);
+  const change = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setNewItem(() => event.target.value);
-  };
+  }, []);
   return (
     <div className="min-h-screen bg-gray-100 pt-4">
       <div className="mx-auto w-1/2">
