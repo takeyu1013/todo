@@ -1,4 +1,23 @@
 import { ChangeEvent, useCallback, useState } from "react";
+import { createClient } from '@supabase/supabase-js';
+import { GetStaticProps } from "next";
+
+const client = createClient('https://jqpwnpykbqvynmupumjc.supabase.co', process.env.SUPABASE_KEY as string);
+
+type Todo = {
+  id: number,
+  item: string
+};
+
+export const getStaticProps: GetStaticProps = async () => {
+  const response = await client.from<Todo>('todo').select('*');
+  const data = response.data;
+  return {
+    props: {
+      data
+    }
+  };
+};
 
 const ITEMS = [
   'Get groceries after work',
@@ -6,9 +25,14 @@ const ITEMS = [
   'Finish the Docker 101 workshop'
 ];
 
-const Home = () => {
+type Props = {
+  data: Todo[]
+};
+
+const Home = ({ data }: Props) => {
   const [items, setItems] = useState(ITEMS);
   const [newItem, setNewItem] = useState('Hell, word!');
+  const [todos, setTodos] = useState(data);
   const add = useCallback(() => {
     setItems(items => items.concat([newItem]));
   }, []);
@@ -36,6 +60,9 @@ const Home = () => {
               <button className="px-2 py-1 flex-shrink rounded text-white bg-red-500 hover:bg-red-700" onClick={remove.bind(this, index)}>Delete</button>
             </div>
           );
+        })}
+        {todos.map((todo) => {
+          return <li key={todo.id}>{todo.item}</li>
         })}
       </div>
     </div>
