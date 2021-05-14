@@ -1,48 +1,28 @@
-import { ChangeEvent, useCallback, useState } from "react";
-import { createClient } from '@supabase/supabase-js';
-import { GetStaticProps } from "next";
-
-const client = createClient('https://jqpwnpykbqvynmupumjc.supabase.co', process.env.SUPABASE_KEY as string);
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { client } from '../lib/supabase';
 
 type Todo = {
   id: number,
   item: string
 };
 
-export const getStaticProps: GetStaticProps = async () => {
-  const response = await client.from<Todo>('todo').select('*');
-  const data = response.data;
-  return {
-    props: {
-      data
+const Home = () => {
+  const fetch = async () => {
+    const { data: todos, error } = await client.from<Todo>('todo').select('*');
+    if (!error) {
+      setTodos(todos as Todo[]);
     }
   };
-};
-
-const ITEMS = [
-  'Get groceries after work',
-  'Do amazing things!',
-  'Finish the Docker 101 workshop'
-];
-
-type Props = {
-  data: Todo[]
-};
-
-const Home = ({ data }: Props) => {
-  const [items, setItems] = useState(ITEMS);
+  useEffect(() => {
+    fetch();
+  }, []);
+  const [todos, setTodos] = useState([] as Todo[]);
   const [newItem, setNewItem] = useState('Hell, word!');
-  const [todos, setTodos] = useState(data);
-  const add = useCallback(() => {
-    setItems(items => items.concat([newItem]));
-  }, []);
-  const remove = useCallback((index: number) => {
-    setItems(items => {
-      const result = [...items];
-      result.splice(index, 1);
-      return result;
-    });
-  }, []);
+  const add = async () => {
+    const { data: todo, error } = await client.from<Todo>('todo').insert({ id: todos.length + 1, item: newItem }).single();
+    if (error) console.log('error', error);
+    else setTodos([...todos, todo] as Todo[]);
+  };
   const change = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setNewItem(() => event.target.value);
   }, []);
@@ -53,16 +33,10 @@ const Home = ({ data }: Props) => {
           <input className="px-2 py-1 flex-auto" value={newItem} onChange={change} />
           <button className="px-2 py-1 flex-shrink rounded text-white bg-green-500 hover:bg-green-700" onClick={add}>Add Item</button>
         </div>
-        {items.map((item, index) => {
-          return (
-            <div className="mb-4 flex" key={index}>
-              <li className="px-2 py-1 flex-auto bg-white list-none">{item}</li>
-              <button className="px-2 py-1 flex-shrink rounded text-white bg-red-500 hover:bg-red-700" onClick={remove.bind(this, index)}>Delete</button>
-            </div>
-          );
-        })}
         {todos.map((todo) => {
-          return <li key={todo.id}>{todo.item}</li>
+          return (
+            <li key={todo.id} className="px-2 py-1 flex-auto bg-white list-none mb-4">{todo.item}</li>
+          );
         })}
       </div>
     </div>
