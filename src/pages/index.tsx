@@ -21,7 +21,7 @@ const Home = () => {
   }, []);
   const add = async () => {
     const { data: todo } = await client.from<Todo>('todo').insert({ item: newItem }).single();
-    setTodos([...todos, todo] as Todo[]);
+    setTodos([...todos, todo as Todo]);
   };
   const remove = async (id: number) => {
     await client.from<Todo>('todo').delete().eq('id', id);
