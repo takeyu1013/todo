@@ -1,4 +1,4 @@
-import { InferGetStaticPropsType } from 'next'
+import { InferGetServerSidePropsType } from 'next'
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { client } from '../lib/supabase';
 
@@ -7,7 +7,7 @@ type Todo = {
   item: string
 };
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
   const response = await client.from<Todo>('todo').select('*');
   const data = response.data as Todo[];
   return {
@@ -17,7 +17,7 @@ export const getStaticProps = async () => {
   };
 };
 
-const Home = ({ data }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [todos, setTodos] = useState(data);
   const [newItem, setNewItem] = useState('Hell, word!');
   const change = useCallback((event: ChangeEvent<HTMLInputElement>) => {
