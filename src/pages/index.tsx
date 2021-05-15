@@ -1,4 +1,5 @@
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { InferGetStaticPropsType } from 'next'
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { client } from '../lib/supabase';
 
 type Todo = {
@@ -6,15 +7,18 @@ type Todo = {
   item: string
 };
 
-const Home = () => {
-  const [todos, setTodos] = useState([] as Todo[]);
-  const fetch = useCallback(async () => {
-    const { data: todos } = await client.from<Todo>('todo').select('*');
-    setTodos(todos as Todo[]);
-  }, []);
-  useEffect(() => {
-    fetch();
-  }, []);
+export const getStaticProps = async () => {
+  const response = await client.from<Todo>('todo').select('*');
+  const data = response.data as Todo[];
+  return {
+    props: {
+      data
+    }
+  };
+};
+
+const Home = ({ data }: InferGetStaticPropsType<typeof getStaticProps>) => {
+  const [todos, setTodos] = useState(data);
   const [newItem, setNewItem] = useState('Hell, word!');
   const change = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setNewItem(() => event.target.value);
