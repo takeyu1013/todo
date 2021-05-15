@@ -7,25 +7,26 @@ type Todo = {
 };
 
 const Home = () => {
-  const fetch = async () => {
-    const { data: todos, error } = await client.from<Todo>('todo').select('*');
-    if (!error) {
-      setTodos(todos as Todo[]);
-    }
-  };
+  const [todos, setTodos] = useState([] as Todo[]);
+  const fetch = useCallback(async () => {
+    const { data: todos } = await client.from<Todo>('todo').select('*');
+    setTodos(todos as Todo[]);
+  }, []);
   useEffect(() => {
     fetch();
   }, []);
-  const [todos, setTodos] = useState([] as Todo[]);
   const [newItem, setNewItem] = useState('Hell, word!');
-  const add = async () => {
-    const { data: todo, error } = await client.from<Todo>('todo').insert({ id: todos.length + 1, item: newItem }).single();
-    if (error) console.log('error', error);
-    else setTodos([...todos, todo] as Todo[]);
-  };
   const change = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setNewItem(() => event.target.value);
   }, []);
+  const add = async () => {
+    const { data: todo } = await client.from<Todo>('todo').insert({ item: newItem }).single();
+    setTodos([...todos, todo] as Todo[]);
+  };
+  const remove = async (id: number) => {
+    await client.from<Todo>('todo').delete().eq('id', id);
+    setTodos(todos.filter((todo) => todo.id != id));
+  };
   return (
     <div className="min-h-screen bg-gray-100 pt-4">
       <div className="mx-auto w-1/2">
@@ -35,7 +36,10 @@ const Home = () => {
         </div>
         {todos.map((todo) => {
           return (
-            <li key={todo.id} className="px-2 py-1 flex-auto bg-white list-none mb-4">{todo.item}</li>
+            <div key={todo.id} className="pb-4 flex">
+              <li className="px-2 py-1 flex-auto bg-white list-none">{todo.item}</li>
+              <button className="px-2 py-1 flex-shrink rounded text-white bg-red-500 hover:bg-red-700" onClick={remove.bind(this, todo.id)}>Delete</button>
+            </div>
           );
         })}
       </div>
