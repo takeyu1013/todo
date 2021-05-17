@@ -1,5 +1,5 @@
 import { InferGetServerSidePropsType } from 'next'
-import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, useCallback, useState } from 'react';
 import { client } from '../lib/supabase';
 
 type Todo = {
