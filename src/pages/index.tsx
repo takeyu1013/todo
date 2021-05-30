@@ -2,6 +2,8 @@ import { InferGetServerSidePropsType } from 'next'
 import { ChangeEvent, useCallback, useState } from 'react';
 import { client } from '../lib/supabase';
 
+import type { NextPage } from 'next/types';
+
 type Todo = {
   id: number,
   item: string
@@ -17,7 +19,7 @@ export const getServerSideProps = async () => {
   };
 };
 
-const Home = ({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ data }) => {
   const [todos, setTodos] = useState(data);
   const [newItem, setNewItem] = useState('Hell, word!');
   const change = useCallback((event: ChangeEvent<HTMLInputElement>) => {
