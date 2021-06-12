@@ -34,11 +34,11 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
     setTodos(todos.filter((todo) => todo.id != id));
   };
   return (
-    <div className="min-h-screen bg-gray-100 pt-4">
-      <div className="mx-auto w-1/2">
+    <main className="min-h-screen bg-gray-100 pt-4">
+      <div className="mx-auto w-80 md:w-1/2">
         <div className="pb-8 flex">
           <input className="px-2 py-1 flex-auto" value={newItem} onChange={change} />
-          <button className="px-2 py-1 flex-shrink rounded text-white bg-green-500 hover:bg-green-700" onClick={add}>Add Item</button>
+          <button className="px-2 py-1 flex-shrink rounded text-white bg-green-500 hover:bg-green-700" onClick={add}>Add</button>
         </div>
         {todos.map((todo) => {
           return (
@@ -49,7 +49,7 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
           );
         })}
       </div>
-    </div>
+    </main>
   );
 };
 
