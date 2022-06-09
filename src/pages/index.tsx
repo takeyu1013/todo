@@ -9,7 +9,9 @@ const Home: NextPage = () => {
         <Menu
           className="ml-auto"
           classNames={{ body: "px-0 py-2 w-80 rounded-2xl" }}
-          control={<Avatar />}
+          control={
+            <Avatar className="cursor-pointer opacity-60 hover:opacity-100" />
+          }
           placement="center"
         >
           <Menu.Item className="px-6 py-3 font-bold">設定</Menu.Item>
