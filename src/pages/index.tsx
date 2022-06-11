@@ -1,11 +1,11 @@
-import { Avatar, Menu, MenuItem } from "@mantine/core";
+import { Avatar, Menu } from "@mantine/core";
 import type { NextPage } from "next";
 
 const Home: NextPage = () => {
   return (
     <div>
       <header className="flex px-48 py-6">
-        <h1 className="my-0 text-3xl font-bold text-rose-600">Todo</h1>
+        <h1 className="my-0 text-3xl font-bold text-rose-500">Todo</h1>
         <Menu
           className="ml-auto"
           classNames={{ body: "px-0 py-2 w-80 rounded-2xl" }}
@@ -20,10 +20,28 @@ const Home: NextPage = () => {
           </Menu.Item>
         </Menu>
       </header>
-      <main className="mx-20">
-        <div className="mx-6 mt-6">
-          <h2 className="my-0">今日する</h2>
-        </div>
+      <main className="flex px-20">
+        {(
+          [
+            ["text-rose-500", "今日する"],
+            ["text-orange-400", "明日する"],
+            ["text-yellow-400", "今度する"],
+          ] as ReadonlyArray<
+            Readonly<
+              | ["text-rose-500", "今日する"]
+              | ["text-orange-400", "明日する"]
+              | ["text-yellow-400", "今度する"]
+            >
+          >
+        ).map(([color, schedule]) => {
+          return (
+            <div key={color} className="w-1/3">
+              <div className="px-6 pt-6">
+                <h2 className={`my-0 font-bold ${color}`}>{schedule}</h2>
+              </div>
+            </div>
+          );
+        })}
       </main>
     </div>
   );
