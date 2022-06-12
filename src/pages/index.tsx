@@ -30,7 +30,7 @@ const Home: NextPage = () => {
         ).map(([color, schedule]) => {
           return (
             <div key={color} className="w-1/3">
-              <div className="px-6 pt-6">
+              <div className="p-6">
                 <h2 className={`my-0 font-bold ${color}`}>{schedule}</h2>
               </div>
             </div>
