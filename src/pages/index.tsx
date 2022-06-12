@@ -26,13 +26,7 @@ const Home: NextPage = () => {
             ["text-rose-500", "今日する"],
             ["text-orange-400", "明日する"],
             ["text-yellow-400", "今度する"],
-          ] as ReadonlyArray<
-            Readonly<
-              | ["text-rose-500", "今日する"]
-              | ["text-orange-400", "明日する"]
-              | ["text-yellow-400", "今度する"]
-            >
-          >
+          ] as const
         ).map(([color, schedule]) => {
           return (
             <div key={color} className="w-1/3">
