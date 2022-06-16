@@ -33,6 +33,10 @@ const Home: NextPage = () => {
             <div key={color} className="w-1/3">
               <div className="p-6">
                 <h2 className={`text-xl font-bold ${color}`}>{schedule}</h2>
+                <input
+                  className="outline-none"
+                  placeholder="タスクを追加する"
+                />
               </div>
             </div>
           );
