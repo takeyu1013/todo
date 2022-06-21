@@ -1,11 +1,14 @@
-import { Avatar, Menu } from "@mantine/core";
 import type { NextPage } from "next";
+
+import { Avatar, Checkbox, Group, Input, Menu, Title } from "@mantine/core";
 
 const Home: NextPage = () => {
   return (
     <div>
       <header className="flex px-48 py-6">
-        <h1 className="text-3xl font-bold text-rose-500">Todo</h1>
+        <Title className="text-3xl text-rose-500" order={2}>
+          Todo
+        </Title>
         <Menu
           className="ml-auto"
           classNames={{
@@ -32,11 +35,17 @@ const Home: NextPage = () => {
           return (
             <div key={color} className="w-1/3">
               <div className="p-6">
-                <h2 className={`text-xl font-bold ${color}`}>{schedule}</h2>
-                <input
-                  className="outline-none"
-                  placeholder="タスクを追加する"
-                />
+                <Title className={`text-xl font-bold ${color}`} order={2}>
+                  {schedule}
+                </Title>
+                <Group spacing="sm">
+                  <Checkbox radius="lg" />
+                  <Input
+                    variant="unstyled"
+                    placeholder="タスクを追加する"
+                    size="md"
+                  />
+                </Group>
               </div>
             </div>
           );
