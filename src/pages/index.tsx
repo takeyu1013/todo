@@ -64,7 +64,7 @@ const Home: NextPage = () => {
                     <Group className="h-10" spacing="sm">
                       <Checkbox radius="lg" size="md" />
                       <Input
-                        classNames={{ input: "h-6" }}
+                        classNames={{ input: "h-6 min-h-0" }}
                         variant="unstyled"
                         placeholder="タスクを追加する"
                         size="md"
