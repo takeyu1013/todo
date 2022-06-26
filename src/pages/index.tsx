@@ -1,6 +1,15 @@
 import type { NextPage } from "next";
 
-import { Avatar, Checkbox, Group, Input, Menu, Title } from "@mantine/core";
+import {
+  Avatar,
+  Checkbox,
+  Group,
+  Input,
+  List,
+  Menu,
+  Text,
+  Title,
+} from "@mantine/core";
 
 const Home: NextPage = () => {
   return (
@@ -35,17 +44,34 @@ const Home: NextPage = () => {
           return (
             <div key={color} className="w-1/3">
               <div className="p-6">
-                <Title className={`text-xl font-bold ${color}`} order={2}>
+                <Title className={`text-xl font-bold ${color} pb-4`} order={2}>
                   {schedule}
                 </Title>
-                <Group spacing="sm">
-                  <Checkbox radius="lg" />
-                  <Input
-                    variant="unstyled"
-                    placeholder="タスクを追加する"
-                    size="md"
-                  />
-                </Group>
+                <List>
+                  <List.Item>
+                    <Group className="h-10" spacing="sm">
+                      <Checkbox radius="lg" size="md" />
+                      <Text>foo</Text>
+                    </Group>
+                  </List.Item>
+                  <List.Item>
+                    <Group className="h-10" spacing="sm">
+                      <Checkbox radius="lg" size="md" />
+                      <Text>bar</Text>
+                    </Group>
+                  </List.Item>
+                  <List.Item>
+                    <Group className="h-10" spacing="sm">
+                      <Checkbox radius="lg" size="md" />
+                      <Input
+                        classNames={{ input: "h-6 p-0 m-0" }}
+                        variant="unstyled"
+                        placeholder="タスクを追加する"
+                        size="md"
+                      />
+                    </Group>
+                  </List.Item>
+                </List>
               </div>
             </div>
           );
