@@ -10,8 +10,11 @@ import {
   Text,
   Title,
 } from "@mantine/core";
+import { useState } from "react";
 
 const Home: NextPage = () => {
+  const [todos, _setTodos] = useState(["foo", "bar", "baz"]);
+
   return (
     <div>
       <header className="flex px-48 py-6">
@@ -47,18 +50,16 @@ const Home: NextPage = () => {
                   {schedule}
                 </Title>
                 <List>
-                  <List.Item>
-                    <Group className="h-10" spacing="sm">
-                      <Checkbox radius="lg" size="md" />
-                      <Text>foo</Text>
-                    </Group>
-                  </List.Item>
-                  <List.Item>
-                    <Group className="h-10" spacing="sm">
-                      <Checkbox radius="lg" size="md" />
-                      <Text>bar</Text>
-                    </Group>
-                  </List.Item>
+                  {todos.map((todo, index) => {
+                    return (
+                      <List.Item key={index}>
+                        <Group className="h-10" spacing="sm">
+                          <Checkbox radius="lg" size="md" />
+                          <Text>{todo}</Text>
+                        </Group>
+                      </List.Item>
+                    );
+                  })}
                   <List.Item>
                     <Group className="h-10" spacing="sm">
                       <Checkbox radius="lg" size="md" />
