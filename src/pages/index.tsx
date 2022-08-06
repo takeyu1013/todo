@@ -19,18 +19,17 @@ const Home: NextPage = () => {
           Todo
         </Title>
         <Menu
-          className="ml-auto"
           classNames={{
-            body: "px-0 py-2 w-80 rounded-2xl",
             item: "px-6 py-3 text-sm font-bold",
           }}
-          control={
-            <Avatar className="cursor-pointer opacity-60 hover:opacity-100" />
-          }
-          placement="center"
         >
-          <Menu.Item>設定</Menu.Item>
-          <Menu.Item color="red">ログアウト</Menu.Item>
+          <Menu.Target>
+            <Avatar className="ml-auto cursor-pointer opacity-60 hover:opacity-100" />
+          </Menu.Target>
+          <Menu.Dropdown className="w-80 rounded-2xl px-0 py-2">
+            <Menu.Item>設定</Menu.Item>
+            <Menu.Item color="red">ログアウト</Menu.Item>
+          </Menu.Dropdown>
         </Menu>
       </header>
       <main className="flex px-20">
