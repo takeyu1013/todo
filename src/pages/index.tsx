@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 
-import { AppShell, Header, Text } from "@mantine/core";
+import { AppShell, Avatar, Header, Space, Text } from "@mantine/core";
 
 const Home: NextPage = () => {
   return (
@@ -9,11 +9,14 @@ const Home: NextPage = () => {
         <Header
           height={56}
           withBorder={false}
-          className="flex items-center justify-center"
+          px={24}
+          className="flex items-center justify-between"
         >
+          <Space w={36} />
           <Text size={24} color="pink" weight={700}>
             Todo
           </Text>
+          <Avatar size={36} />
         </Header>
       }
     >
