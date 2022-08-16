@@ -20,7 +20,7 @@ const Home: NextPage = () => {
         </Header>
       }
     >
-      <Text size={22} color="pink" weight={700}>
+      <Text size={22} color="pink" weight={700} px={8}>
         今日する
       </Text>
     </AppShell>
