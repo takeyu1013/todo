@@ -1,6 +1,14 @@
 import type { NextPage } from "next";
 
-import { AppShell, Avatar, Header, Space, Text } from "@mantine/core";
+import {
+  AppShell,
+  Avatar,
+  Header,
+  Space,
+  Stack,
+  Text,
+  TextInput,
+} from "@mantine/core";
 
 const Home: NextPage = () => {
   return (
@@ -20,9 +28,12 @@ const Home: NextPage = () => {
         </Header>
       }
     >
-      <Text size={22} color="pink" weight={700} px={8}>
-        今日する
-      </Text>
+      <Stack>
+        <Text size={22} color="pink" weight={700} px={8}>
+          今日する
+        </Text>
+        <TextInput placeholder="タスクを追加する" variant="unstyled" />
+      </Stack>
     </AppShell>
   );
 };
