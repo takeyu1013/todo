@@ -3,6 +3,8 @@ import type { NextPage } from "next";
 import {
   AppShell,
   Avatar,
+  Checkbox,
+  Group,
   Header,
   Space,
   Stack,
@@ -32,7 +34,15 @@ const Home: NextPage = () => {
         <Text size={22} color="pink" weight={700} px={8}>
           今日する
         </Text>
-        <TextInput placeholder="タスクを追加する" variant="unstyled" />
+        <Group p={8} spacing={12}>
+          <Checkbox radius="lg" />
+          <TextInput
+            placeholder="タスクを追加する"
+            variant="unstyled"
+            size="md"
+            styles={{ input: { height: 24, minHeight: 24 } }}
+          />
+        </Group>
       </Stack>
     </AppShell>
   );
