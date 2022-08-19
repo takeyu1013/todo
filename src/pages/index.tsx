@@ -11,8 +11,12 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
+import { useInputState } from "@mantine/hooks";
 
 const Home: NextPage = () => {
+  const [todo, setTodo] = useInputState("");
+  console.log(todo);
+
   return (
     <AppShell
       header={
@@ -41,6 +45,8 @@ const Home: NextPage = () => {
             variant="unstyled"
             size="md"
             styles={{ input: { height: 24, minHeight: 24 } }}
+            value={todo}
+            onChange={({ currentTarget }) => setTodo(currentTarget.value)}
           />
         </Group>
       </Stack>
