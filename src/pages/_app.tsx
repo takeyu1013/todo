@@ -1,6 +1,7 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import { createEmotionCache, MantineProvider } from "@mantine/core";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (
@@ -9,7 +10,9 @@ const App = ({ Component, pageProps }: AppProps) => {
       withNormalizeCSS
       emotionCache={createEmotionCache({ key: "mantine" })}
     >
-      <Component {...pageProps} />
+      <ClerkProvider {...pageProps}>
+        <Component {...pageProps} />
+      </ClerkProvider>
     </MantineProvider>
   );
 };
