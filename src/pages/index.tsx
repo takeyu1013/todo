@@ -12,10 +12,11 @@ import {
   TextInput,
 } from "@mantine/core";
 import { useInputState } from "@mantine/hooks";
+import { useUser } from "@clerk/nextjs";
 
 const Home: NextPage = () => {
   const [todo, setTodo] = useInputState("");
-  console.log(todo);
+  const { user } = useUser();
 
   return (
     <AppShell
@@ -30,7 +31,7 @@ const Home: NextPage = () => {
           <Text size={24} color="pink" weight={700}>
             Todo
           </Text>
-          <Avatar size={36} />
+          <Avatar src={user?.profileImageUrl} size={36} />
         </Header>
       }
     >
