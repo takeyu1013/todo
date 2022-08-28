@@ -6,6 +6,7 @@ import {
   Checkbox,
   Group,
   Header,
+  Menu,
   Space,
   Stack,
   Text,
@@ -13,8 +14,10 @@ import {
 } from "@mantine/core";
 import { useInputState } from "@mantine/hooks";
 import { useUser } from "@clerk/nextjs";
+import { useState } from "react";
 
 const Home: NextPage = () => {
+  const [checked, setChecked] = useState(false);
   const [todo, setTodo] = useInputState("");
   const { user } = useUser();
 
@@ -31,7 +34,14 @@ const Home: NextPage = () => {
           <Text size={24} color="pink" weight={700}>
             Todo
           </Text>
-          <Avatar src={user?.profileImageUrl} size={36} />
+          <Menu>
+            <Menu.Target>
+              <Avatar src={user?.profileImageUrl} size={36} />
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Item color="red">ログアウト</Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
         </Header>
       }
     >
@@ -39,8 +49,19 @@ const Home: NextPage = () => {
         <Text size={22} color="pink" weight={700} px={8}>
           今日する
         </Text>
-        <Group p={8} spacing={12}>
-          <Checkbox radius="lg" />
+        <Group
+          onBlur={() => {
+            console.log("checke", checked);
+            console.log("todo:", todo);
+          }}
+          p={8}
+          spacing={12}
+        >
+          <Checkbox
+            radius="lg"
+            checked={checked}
+            onChange={(event) => setChecked(event.currentTarget.checked)}
+          />
           <TextInput
             placeholder="タスクを追加する"
             variant="unstyled"
