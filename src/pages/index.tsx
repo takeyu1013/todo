@@ -13,13 +13,14 @@ import {
   TextInput,
 } from "@mantine/core";
 import { useInputState } from "@mantine/hooks";
-import { useUser } from "@clerk/nextjs";
+import { useClerk, useUser } from "@clerk/nextjs";
 import { useState } from "react";
 
 const Home: NextPage = () => {
   const [checked, setChecked] = useState(false);
   const [todo, setTodo] = useInputState("");
   const { user } = useUser();
+  const { signOut } = useClerk();
 
   return (
     <AppShell
@@ -39,7 +40,14 @@ const Home: NextPage = () => {
               <Avatar src={user?.profileImageUrl} size={36} />
             </Menu.Target>
             <Menu.Dropdown>
-              <Menu.Item color="red">ログアウト</Menu.Item>
+              <Menu.Item
+                color="red"
+                onClick={() => {
+                  signOut();
+                }}
+              >
+                ログアウト
+              </Menu.Item>
             </Menu.Dropdown>
           </Menu>
         </Header>
