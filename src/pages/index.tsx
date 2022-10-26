@@ -18,6 +18,7 @@ import { useState } from "react";
 
 const Home: NextPage = () => {
   const [checked, setChecked] = useState(false);
+  const [todos] = useInputState(["foo", "bar", "baz"]);
   const [todo, setTodo] = useInputState("");
   const { user } = useUser();
   const { signOut } = useClerk();
@@ -57,9 +58,29 @@ const Home: NextPage = () => {
         <Text size={22} color="pink" weight={700} px={8}>
           今日する
         </Text>
+        {todos.map((todo, index) => {
+          return (
+            <Group
+              key={index}
+              onBlur={() => {
+                console.log("check", checked);
+                console.log("todo:", todo);
+              }}
+              p={8}
+              spacing={12}
+            >
+              <Checkbox
+                radius="lg"
+                checked={checked}
+                onChange={(event) => setChecked(event.currentTarget.checked)}
+              />
+              <Text>{todo}</Text>
+            </Group>
+          );
+        })}
         <Group
           onBlur={() => {
-            console.log("checke", checked);
+            console.log("check", checked);
             console.log("todo:", todo);
           }}
           p={8}
