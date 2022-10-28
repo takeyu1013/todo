@@ -18,7 +18,7 @@ import { useState } from "react";
 
 const Home: NextPage = () => {
   const [checked, setChecked] = useState(false);
-  const [todos] = useInputState(["foo", "bar", "baz"]);
+  const [todos, setTodos] = useInputState(["foo", "bar", "baz"]);
   const [todo, setTodo] = useInputState("");
   const { user } = useUser();
   const { signOut } = useClerk();
@@ -80,8 +80,11 @@ const Home: NextPage = () => {
         })}
         <Group
           onBlur={() => {
-            console.log("check", checked);
-            console.log("todo:", todo);
+            if (!todo) {
+              return;
+            }
+            setTodos([...todos, todo]);
+            setTodo("");
           }}
           p={8}
           spacing={12}
