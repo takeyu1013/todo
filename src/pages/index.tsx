@@ -1,5 +1,6 @@
 import type { FC } from "react";
 import type { NextPage } from "next";
+import type { Todo } from "@prisma/client";
 
 import { useState } from "react";
 import {
@@ -30,7 +31,7 @@ const Todo: FC<{ text: string }> = ({ text }) => {
 };
 
 const Todos: FC = () => {
-  const { data } = useSWR<string[]>("/api/todos", async (url) => {
+  const { data } = useSWR<Todo[]>("/api/todos", async (url) => {
     return (await fetch(url)).json();
   });
   const [todos, setTodos] = useState([""]);
@@ -38,9 +39,11 @@ const Todos: FC = () => {
 
   return (
     <>
-      {(data ? [...data, ...todos] : todos).map((text, index) => {
-        return text && <Todo key={index} text={text} />;
-      })}
+      {(data ? [...data.map(({ text }) => text), ...todos] : todos).map(
+        (text, index) => {
+          return text && <Todo key={index} text={text} />;
+        }
+      )}
       <Group
         onBlur={() => {
           if (!todo) return;
