@@ -16,6 +16,7 @@ import {
 } from "@mantine/core";
 import { useInputState } from "@mantine/hooks";
 import { useClerk, useUser } from "@clerk/nextjs";
+import useSWR from "swr";
 
 const Todo: FC<{ text: string }> = ({ text }) => {
   const [checked, setChecked] = useInputState(false);
@@ -29,13 +30,16 @@ const Todo: FC<{ text: string }> = ({ text }) => {
 };
 
 const Todos: FC = () => {
-  const [todos, setTodos] = useState(["foo", "bar", "baz"]);
+  const { data } = useSWR<string[]>("/api/todos", async (url) => {
+    return (await fetch(url)).json();
+  });
+  const [todos, setTodos] = useState([""]);
   const [todo, setTodo] = useInputState("");
 
   return (
     <>
-      {todos.map((todo, index) => {
-        return <Todo key={index} text={todo} />;
+      {(data ? [...data, ...todos] : todos).map((text, index) => {
+        return text && <Todo key={index} text={text} />;
       })}
       <Group
         onBlur={() => {
