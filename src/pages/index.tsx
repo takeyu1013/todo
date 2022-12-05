@@ -1,6 +1,7 @@
-import type { NextPage } from "next";
 import type { FC } from "react";
+import type { NextPage } from "next";
 
+import { useState } from "react";
 import {
   AppShell,
   Avatar,
@@ -17,25 +18,49 @@ import { useInputState } from "@mantine/hooks";
 import { useClerk, useUser } from "@clerk/nextjs";
 
 const Todo: FC<{ text: string }> = ({ text }) => {
-  const [todo, setTodo] = useInputState([false, text]);
+  const [checked, setChecked] = useInputState(false);
 
   return (
     <Group p={8} spacing={12}>
-      <Checkbox
-        radius="lg"
-        checked={!!todo[0]}
-        onChange={(event) => {
-          setTodo([event.currentTarget.checked, todo[1]]);
-        }}
-      />
-      <Text>{todo[1]}</Text>
+      <Checkbox radius="lg" checked={checked} onChange={setChecked} />
+      <Text>{text}</Text>
     </Group>
   );
 };
 
-const Home: NextPage = () => {
-  const [todos, setTodos] = useInputState(["foo", "bar", "baz"]);
+const Todos: FC = () => {
+  const [todos, setTodos] = useState(["foo", "bar", "baz"]);
   const [todo, setTodo] = useInputState("");
+
+  return (
+    <>
+      {todos.map((todo, index) => {
+        return <Todo key={index} text={todo} />;
+      })}
+      <Group
+        onBlur={() => {
+          if (!todo) return;
+          setTodos([...todos, todo]);
+          setTodo("");
+        }}
+        p={8}
+        spacing={12}
+      >
+        <Checkbox radius="lg" />
+        <TextInput
+          placeholder="タスクを追加する"
+          variant="unstyled"
+          size="md"
+          styles={{ input: { height: 24, minHeight: 24 } }}
+          value={todo}
+          onChange={setTodo}
+        />
+      </Group>
+    </>
+  );
+};
+
+const Home: NextPage = () => {
   const { user } = useUser();
   const { signOut } = useClerk();
 
@@ -74,30 +99,7 @@ const Home: NextPage = () => {
         <Text size={22} color="pink" weight={700} px={8}>
           今日する
         </Text>
-        {todos.map((todo, index) => {
-          return <Todo key={index} text={todo} />;
-        })}
-        <Group
-          onBlur={() => {
-            if (!todo) return;
-            setTodos([...todos, todo]);
-            setTodo("");
-          }}
-          p={8}
-          spacing={12}
-        >
-          <Checkbox radius="lg" />
-          <TextInput
-            placeholder="タスクを追加する"
-            variant="unstyled"
-            size="md"
-            styles={{ input: { height: 24, minHeight: 24 } }}
-            value={todo}
-            onChange={(event) => {
-              setTodo(event.currentTarget.value);
-            }}
-          />
-        </Group>
+        <Todos />
       </Stack>
     </AppShell>
   );
