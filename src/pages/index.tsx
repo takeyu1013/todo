@@ -45,10 +45,15 @@ const Todos: FC = () => {
         }
       )}
       <Group
-        onBlur={() => {
+        onBlur={async () => {
           if (!todo) return;
           setTodos([...todos, todo]);
           setTodo("");
+          await fetch("/api/todos", {
+            method: "POST",
+            headers: { "Content-type": "application/json" },
+            body: JSON.stringify(todo),
+          });
         }}
         p={8}
         spacing={12}
