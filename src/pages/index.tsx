@@ -1,4 +1,4 @@
-import type { FC } from "react";
+import type { FC, MouseEventHandler } from "react";
 import type { NextPage } from "next";
 import type { Todo } from "@prisma/client";
 
@@ -7,6 +7,7 @@ import {
   AppShell,
   Avatar,
   Checkbox,
+  CloseButton,
   Group,
   Header,
   Menu,
@@ -19,29 +20,38 @@ import { useInputState } from "@mantine/hooks";
 import { useClerk, useUser } from "@clerk/nextjs";
 import useSWR from "swr";
 
-const Todo: FC<{ text: string }> = ({ text }) => {
+const Todo: FC<{
+  text: string;
+  onClick: MouseEventHandler<HTMLButtonElement>;
+}> = ({ text, onClick }) => {
   const [checked, setChecked] = useInputState(false);
 
   return (
-    <Group p={8} spacing={12}>
-      <Checkbox radius="lg" checked={checked} onChange={setChecked} />
-      <Text>{text}</Text>
+    <Group position="apart">
+      <Group p={8} spacing={12}>
+        <Checkbox radius="lg" checked={checked} onChange={setChecked} />
+        <Text>{text}</Text>
+      </Group>
+      <CloseButton onClick={onClick} />
     </Group>
   );
 };
 
 const Todos: FC = () => {
-  const { data } = useSWR<Todo[]>("/api/todos", async (url) => {
+  const { data } = useSWR<Todo[]>("/api/todo", async (url) => {
     return (await fetch(url)).json();
   });
-  const [todos, setTodos] = useState([""]);
+  const [todos, setTodos] = useState<string[]>([]);
   const [todo, setTodo] = useInputState("");
 
   return (
     <>
       {(data ? [...data.map(({ text }) => text), ...todos] : todos).map(
         (text, index) => {
-          return text && <Todo key={index} text={text} />;
+          const handleClick: MouseEventHandler<HTMLButtonElement> = () => {
+            setTodos((todos) => todos.filter((todo) => todo !== todos[index]));
+          };
+          return text && <Todo key={index} text={text} onClick={handleClick} />;
         }
       )}
       <Group
