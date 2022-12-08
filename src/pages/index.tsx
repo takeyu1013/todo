@@ -38,32 +38,45 @@ const Todo: FC<{
 };
 
 const Todos: FC = () => {
-  const { data } = useSWR<Todo[]>("/api/todo", async (url) => {
-    return (await fetch(url)).json();
-  });
+  // const { data } = useSWR<Todo[]>("/api/todo", async (url) => {
+  //   return (await fetch(url)).json();
+  // });
   const [todos, setTodos] = useState<string[]>([]);
   const [todo, setTodo] = useInputState("");
 
   return (
     <>
-      {(data ? [...data.map(({ text }) => text), ...todos] : todos).map(
-        (text, index) => {
-          const handleClick: MouseEventHandler<HTMLButtonElement> = () => {
-            setTodos((todos) => todos.filter((todo) => todo !== todos[index]));
-          };
-          return text && <Todo key={index} text={text} onClick={handleClick} />;
-        }
-      )}
+      {/* {(data || [{ id: 0, text: "" }]).map(({ id, text }, index) => { */}
+      {todos.map((text, index) => {
+        return (
+          text && (
+            <Todo
+              key={index}
+              text={text}
+              onClick={async () => {
+                // await fetch("/api/todo:id", {
+                //   method: "POST",
+                //   headers: { "Content-type": "application/json" },
+                //   body: JSON.stringify(todo),
+                // });
+                setTodos((todos) =>
+                  todos.filter((todo) => todo !== todos[index])
+                );
+              }}
+            />
+          )
+        );
+      })}
       <Group
         onBlur={async () => {
           if (!todo) return;
           setTodos([...todos, todo]);
           setTodo("");
-          await fetch("/api/todos", {
-            method: "POST",
-            headers: { "Content-type": "application/json" },
-            body: JSON.stringify(todo),
-          });
+          // await fetch("/api/todos", {
+          //   method: "POST",
+          //   headers: { "Content-type": "application/json" },
+          //   body: JSON.stringify(todo),
+          // });
         }}
         p={8}
         spacing={12}
