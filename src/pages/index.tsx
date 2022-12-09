@@ -2,7 +2,6 @@ import type { FC, MouseEventHandler } from "react";
 import type { NextPage } from "next";
 import type { Todo } from "@prisma/client";
 
-import { useState } from "react";
 import {
   AppShell,
   Avatar,
@@ -22,7 +21,7 @@ import useSWR from "swr";
 
 const Todo: FC<{
   text: string;
-  onClick: MouseEventHandler<HTMLButtonElement>;
+  onClick: MouseEventHandler;
 }> = ({ text, onClick }) => {
   const [checked, setChecked] = useInputState(false);
 
@@ -38,45 +37,48 @@ const Todo: FC<{
 };
 
 const Todos: FC = () => {
-  // const { data } = useSWR<Todo[]>("/api/todo", async (url) => {
-  //   return (await fetch(url)).json();
-  // });
-  const [todos, setTodos] = useState<string[]>([]);
+  const { data: todos, mutate } = useSWR<Todo[]>("/api/todos", async (url) =>
+    (await fetch(url)).json()
+  );
   const [todo, setTodo] = useInputState("");
 
   return (
     <>
-      {/* {(data || [{ id: 0, text: "" }]).map(({ id, text }, index) => { */}
-      {todos.map((text, index) => {
-        return (
-          text && (
+      {todos &&
+        todos.map(({ id, text }) => {
+          return (
             <Todo
-              key={index}
+              key={id}
               text={text}
-              onClick={async () => {
-                // await fetch("/api/todo:id", {
-                //   method: "POST",
-                //   headers: { "Content-type": "application/json" },
-                //   body: JSON.stringify(todo),
-                // });
-                setTodos((todos) =>
-                  todos.filter((todo) => todo !== todos[index])
-                );
+              onClick={async (event) => {
+                const currentId = id;
+                event.preventDefault();
+                await fetch(`/api/todo/${id}`, {
+                  method: "DELETE",
+                });
+                mutate(todos.filter(({ id }) => id !== currentId));
               }}
             />
-          )
-        );
-      })}
+          );
+        })}
       <Group
-        onBlur={async () => {
-          if (!todo) return;
-          setTodos([...todos, todo]);
+        onBlur={async (event) => {
+          event.preventDefault();
+          if (!todo || !todos) return;
+          await fetch("/api/todos", {
+            method: "POST",
+            headers: { "Content-type": "application/json" },
+            body: JSON.stringify(todo),
+          });
+          mutate([
+            ...todos,
+            {
+              id: 0,
+              text: todo,
+              createdAt: new Date(),
+            },
+          ]);
           setTodo("");
-          // await fetch("/api/todos", {
-          //   method: "POST",
-          //   headers: { "Content-type": "application/json" },
-          //   body: JSON.stringify(todo),
-          // });
         }}
         p={8}
         spacing={12}
@@ -131,9 +133,6 @@ const Home: NextPage = () => {
       }
     >
       <Stack>
-        <Text size={22} color="pink" weight={700} px={8}>
-          今日する
-        </Text>
         <Todos />
       </Stack>
     </AppShell>
