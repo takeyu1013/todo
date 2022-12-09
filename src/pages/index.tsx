@@ -21,7 +21,7 @@ import useSWR from "swr";
 
 const Todo: FC<{
   text: string;
-  onClick: MouseEventHandler;
+  onClick: MouseEventHandler<HTMLButtonElement>;
 }> = ({ text, onClick }) => {
   const [checked, setChecked] = useInputState(false);
 
@@ -50,9 +50,8 @@ const Todos: FC = () => {
             <Todo
               key={id}
               text={text}
-              onClick={async (event) => {
+              onClick={async () => {
                 const currentId = id;
-                event.preventDefault();
                 await fetch(`/api/todo/${id}`, {
                   method: "DELETE",
                 });
@@ -62,8 +61,7 @@ const Todos: FC = () => {
           );
         })}
       <Group
-        onBlur={async (event) => {
-          event.preventDefault();
+        onBlur={async () => {
           if (!todo || !todos) return;
           await fetch("/api/todos", {
             method: "POST",
