@@ -1,4 +1,9 @@
-import type { FC, MouseEventHandler } from "react";
+import type {
+  ChangeEventHandler,
+  FC,
+  FocusEventHandler,
+  MouseEventHandler,
+} from "react";
 import type { NextPage } from "next";
 import type { Todo } from "@prisma/client";
 
@@ -36,61 +41,114 @@ const Todo: FC<{
   );
 };
 
+const Input: FC<{
+  todo: string;
+  onBlur: FocusEventHandler<HTMLDivElement>;
+  onChange: ChangeEventHandler<HTMLInputElement>;
+}> = ({ todo, onBlur, onChange }) => {
+  return (
+    <Group onBlur={onBlur} p={8} spacing={12}>
+      <Checkbox radius="lg" />
+      <TextInput
+        placeholder="タスクを追加する"
+        variant="unstyled"
+        size="md"
+        styles={{ input: { height: 24, minHeight: 24 } }}
+        value={todo}
+        onChange={onChange}
+      />
+    </Group>
+  );
+};
+
 const Todos: FC = () => {
   const { data: todos, mutate } = useSWR<Todo[]>("/api/todos", async (url) =>
     (await fetch(url)).json()
   );
   const [todo, setTodo] = useInputState("");
 
-  return (
-    <>
-      {todos &&
-        todos.map(({ id, text }) => {
-          return (
-            <Todo
-              key={id}
-              text={text}
-              onClick={async () => {
-                const currentId = id;
-                await fetch(`/api/todo/${id}`, {
-                  method: "DELETE",
-                });
-                mutate(todos.filter(({ id }) => id !== currentId));
-              }}
-            />
-          );
-        })}
-      <Group
+  if (!todos)
+    return (
+      <Input
+        todo={todo}
         onBlur={async () => {
-          if (!todo || !todos) return;
-          await fetch("/api/todos", {
-            method: "POST",
-            headers: { "Content-type": "application/json" },
-            body: JSON.stringify(todo),
-          });
-          mutate([
-            ...todos,
-            {
-              id: 0,
-              text: todo,
-              createdAt: new Date(),
+          if (!todo) return;
+          mutate(
+            async () => {
+              const reponse = await fetch("/api/todos", {
+                method: "POST",
+                headers: { "Content-type": "application/json" },
+                body: JSON.stringify(todo),
+              });
+              return await reponse.json();
             },
-          ]);
+            {
+              optimisticData: [
+                {
+                  id: 0,
+                  text: todo,
+                  createdAt: new Date(),
+                },
+              ],
+            }
+          );
           setTodo("");
         }}
-        p={8}
-        spacing={12}
-      >
-        <Checkbox radius="lg" />
-        <TextInput
-          placeholder="タスクを追加する"
-          variant="unstyled"
-          size="md"
-          styles={{ input: { height: 24, minHeight: 24 } }}
-          value={todo}
-          onChange={setTodo}
-        />
-      </Group>
+        onChange={setTodo}
+      />
+    );
+
+  return (
+    <>
+      {todos.map(({ id, text }) => {
+        return (
+          <Todo
+            key={id}
+            text={text}
+            onClick={async () => {
+              const currentId = id;
+              const nextTodos = todos.filter(({ id }) => id !== currentId);
+              mutate(
+                async () => {
+                  await fetch(`/api/todo/${id}`, {
+                    method: "DELETE",
+                  });
+                  return nextTodos;
+                },
+                { optimisticData: nextTodos }
+              );
+            }}
+          />
+        );
+      })}
+      <Input
+        todo={todo}
+        onBlur={async () => {
+          if (!todo) return;
+          mutate(
+            async () => {
+              const reponse = await fetch("/api/todos", {
+                method: "POST",
+                headers: { "Content-type": "application/json" },
+                body: JSON.stringify(todo),
+              });
+              return [...todos, await reponse.json()];
+            },
+            {
+              optimisticData: [
+                ...todos,
+                {
+                  id: 0,
+                  text: todo,
+                  createdAt: new Date(),
+                },
+              ],
+            }
+          );
+          setTodo("");
+        }}
+        onChange={setTodo}
+      />
     </>
   );
 };
