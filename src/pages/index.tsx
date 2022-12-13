@@ -62,32 +62,32 @@ const Input: FC<{
 };
 
 const Todos: FC = () => {
-  const { data: todos, mutate } = useSWR<Todo[]>("/api/todos", async (url) =>
-    (await fetch(url)).json()
-  );
+  const { data: todos, mutate } = useSWR<
+    (Pick<Todo, "text"> & { id?: number; createdAt?: Date })[]
+  >("/api/todos", async (url) => (await fetch(url)).json());
   const [todo, setTodo] = useInputState("");
 
   if (!todos)
     return (
       <Input
         todo={todo}
-        onBlur={async () => {
+        onBlur={() => {
           if (!todo) return;
           mutate(
-            async () => {
-              const reponse = await fetch("/api/todos", {
-                method: "POST",
-                headers: { "Content-type": "application/json" },
-                body: JSON.stringify(todo),
-              });
-              return await reponse.json();
-            },
+            async () =>
+              (
+                await fetch("/api/todos", {
+                  method: "POST",
+                  headers: { "Content-type": "application/json" },
+                  body: JSON.stringify(todo),
+                })
+              ).json(),
             {
               optimisticData: [
                 {
-                  id: 0,
+                  id: undefined,
                   text: todo,
-                  createdAt: new Date(),
+                  createdAt: undefined,
                 },
               ],
             }
@@ -100,47 +100,45 @@ const Todos: FC = () => {
 
   return (
     <>
-      {todos.map(({ id, text }) => {
-        return (
-          <Todo
-            key={id}
-            text={text}
-            onClick={async () => {
-              const currentId = id;
-              const nextTodos = todos.filter(({ id }) => id !== currentId);
-              mutate(
-                async () => {
-                  await fetch(`/api/todo/${id}`, {
-                    method: "DELETE",
-                  });
-                  return nextTodos;
-                },
-                { optimisticData: nextTodos }
-              );
-            }}
-          />
-        );
-      })}
+      {todos.map(({ id, text }, index) => (
+        <Todo
+          key={index}
+          text={text}
+          onClick={async () => {
+            const currentId = id;
+            mutate(
+              todos.filter(({ id }) => id !== currentId),
+              false
+            );
+            await fetch(`/api/todo/${id}`, {
+              method: "DELETE",
+            });
+            mutate();
+          }}
+        />
+      ))}
       <Input
         todo={todo}
         onBlur={async () => {
           if (!todo) return;
           mutate(
-            async () => {
-              const reponse = await fetch("/api/todos", {
-                method: "POST",
-                headers: { "Content-type": "application/json" },
-                body: JSON.stringify(todo),
-              });
-              return [...todos, await reponse.json()];
-            },
+            async () => [
+              ...todos,
+              await (
+                await fetch("/api/todos", {
+                  method: "POST",
+                  headers: { "Content-type": "application/json" },
+                  body: JSON.stringify(todo),
+                })
+              ).json(),
+            ],
             {
               optimisticData: [
                 ...todos,
                 {
-                  id: 0,
+                  id: undefined,
                   text: todo,
-                  createdAt: new Date(),
+                  createdAt: undefined,
                 },
               ],
             }
