@@ -10,10 +10,11 @@ const handler = requireAuth(
     { status }: NextApiResponse
   ) => {
     const user = await users.getUser(userId);
-    const primaryEmailAddress = user.emailAddresses.find(
-      (emailAddress) => emailAddress.id === user.primaryEmailAddressId
-    )?.emailAddress;
-    console.log("email:", primaryEmailAddress);
+    const email =
+      user.emailAddresses.find(
+        (emailAddress) => emailAddress.id === user.primaryEmailAddressId
+      )?.emailAddress || "foo@example.com";
+    console.log("email:", email);
 
     if (method === "GET") {
       return status(200).json(await prisma.todo.findMany());
@@ -22,6 +23,7 @@ const handler = requireAuth(
         await prisma.todo.create({
           data: {
             text,
+            email,
           },
         })
       );
