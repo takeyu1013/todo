@@ -17,7 +17,7 @@ const handler = requireAuth(
     console.log("email:", email);
 
     if (method === "GET") {
-      return status(200).json(await prisma.todo.findMany());
+      return status(200).json(await prisma.todo.findMany({ where: { email } }));
     } else if (method === "POST") {
       return status(201).json(
         await prisma.todo.create({
