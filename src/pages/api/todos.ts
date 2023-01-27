@@ -14,7 +14,6 @@ const handler = requireAuth(
       user.emailAddresses.find(
         (emailAddress) => emailAddress.id === user.primaryEmailAddressId
       )?.emailAddress || "foo@example.com";
-    console.log("email:", email);
 
     if (method === "GET") {
       return status(200).json(await prisma.todo.findMany({ where: { email } }));
