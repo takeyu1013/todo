@@ -20,4 +20,5 @@ import { PrismaClient } from "@prisma/client";
     ],
   });
   console.log(await prisma.todo.findMany());
+  await prisma.$disconnect();
 })();

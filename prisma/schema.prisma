@@ -17,4 +17,5 @@ model Todo {
   createdAt DateTime @default(now())
   text      String
   email     String
+  checked   Boolean  @default(false)
 }
