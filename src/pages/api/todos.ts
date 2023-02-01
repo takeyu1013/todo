@@ -1,8 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import type { RequireAuthProp } from "@clerk/nextjs/api";
 
-import { prisma } from "src/lib/prisma";
 import { requireAuth, users } from "@clerk/nextjs/api";
+
+import { prisma } from "src/lib/prisma";
 
 const handler = requireAuth(
   async (
