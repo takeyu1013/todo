@@ -25,15 +25,25 @@ import { useClerk, useUser } from "@clerk/nextjs";
 import useSWR from "swr";
 
 const Todo: FC<{
+  id: number | undefined;
   text: string;
   onClick: MouseEventHandler<HTMLButtonElement>;
-}> = ({ text, onClick }) => {
+}> = ({ id, text, onClick }) => {
   const [checked, setChecked] = useInputState(false);
 
   return (
     <Group position="apart">
       <Group p={8} spacing={12}>
-        <Checkbox radius="lg" checked={checked} onChange={setChecked} />
+        <Checkbox
+          radius="lg"
+          checked={checked}
+          onChange={async () => {
+            setChecked(!checked);
+            await fetch(`/api/todo/${id}`, {
+              method: "DELETE",
+            });
+          }}
+        />
         <Text>{text}</Text>
       </Group>
       <CloseButton onClick={onClick} />
@@ -103,6 +113,7 @@ const Todos: FC = () => {
       {todos.map(({ id, text }, index) => (
         <Todo
           key={index}
+          id={id}
           text={text}
           onClick={async () => {
             const currentId = id;
