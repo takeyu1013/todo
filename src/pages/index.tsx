@@ -27,21 +27,24 @@ import useSWR from "swr";
 const Todo: FC<{
   id: number | undefined;
   text: string;
+  checked: boolean;
   onClick: MouseEventHandler<HTMLButtonElement>;
-}> = ({ id, text, onClick }) => {
-  const [checked, setChecked] = useInputState(false);
+}> = ({ id, text, checked, onClick }) => {
+  const [foo, setFoo] = useInputState(checked);
 
   return (
     <Group position="apart">
       <Group p={8} spacing={12}>
         <Checkbox
           radius="lg"
-          checked={checked}
+          checked={foo}
           onChange={async () => {
-            setChecked(!checked);
             await fetch(`/api/todo/${id}`, {
-              method: "DELETE",
+              method: "PUT",
+              headers: { "Content-type": "application/json" },
+              body: JSON.stringify(!foo),
             });
+            setFoo(!foo);
           }}
         />
         <Text>{text}</Text>
@@ -73,7 +76,8 @@ const Input: FC<{
 
 const Todos: FC = () => {
   const { data: todos, mutate } = useSWR<
-    (Pick<Todo, "text"> & { id?: number; createdAt?: Date })[]
+    (Pick<Todo, "text"> &
+      Pick<Todo, "checked"> & { id?: number; createdAt?: Date })[]
   >("/api/todos", async (url) => (await fetch(url)).json());
   const [todo, setTodo] = useInputState("");
 
@@ -98,6 +102,7 @@ const Todos: FC = () => {
                   id: undefined,
                   text: todo,
                   createdAt: undefined,
+                  checked: false,
                 },
               ],
             }
@@ -110,11 +115,12 @@ const Todos: FC = () => {
 
   return (
     <>
-      {todos.map(({ id, text }, index) => (
+      {todos.map(({ id, text, checked }, index) => (
         <Todo
           key={index}
           id={id}
           text={text}
+          checked={checked}
           onClick={async () => {
             const currentId = id;
             mutate(
@@ -149,6 +155,7 @@ const Todos: FC = () => {
                 {
                   id: undefined,
                   text: todo,
+                  checked: false,
                   createdAt: undefined,
                 },
               ],

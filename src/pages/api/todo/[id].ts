@@ -23,14 +23,16 @@ const handler = requireAuth(
         return status(400).json(error);
       }
     } else if (method === "PUT") {
-      const data = JSON.parse(body);
+      const checked = JSON.parse(body);
       try {
         return status(200).json(
           await prisma.todo.update({
             where: {
               id: Number(id),
             },
-            data,
+            data: {
+              checked,
+            },
           })
         );
       } catch (error) {
