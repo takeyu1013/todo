@@ -77,8 +77,7 @@ const Input: FC<{
 
 const Todos: FC = () => {
   const { data: todos, mutate } = useSWR<
-    (Pick<Todo, "text"> &
-      Pick<Todo, "checked"> & { id?: number; createdAt?: Date })[]
+    (Pick<Todo, "text" | "checked"> & { id?: number; createdAt?: Date })[]
   >("/api/todos", async (url) => (await fetch(url)).json());
   const [todo, setTodo] = useInputState("");
 
@@ -116,9 +115,9 @@ const Todos: FC = () => {
 
   return (
     <>
-      {todos.map(({ id, text, checked }, index) => (
+      {todos.map(({ id, text, checked }) => (
         <Todo
-          key={index}
+          key={id}
           id={id}
           text={text}
           checked={checked}
