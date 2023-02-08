@@ -1,8 +1,9 @@
-import type {
+import {
   ChangeEventHandler,
   FC,
   FocusEventHandler,
   MouseEventHandler,
+  useState,
 } from "react";
 import type { NextPage } from "next";
 import type { Todo } from "@prisma/client";
@@ -29,22 +30,22 @@ const Todo: FC<{
   text: string;
   checked: boolean;
   onClick: MouseEventHandler<HTMLButtonElement>;
-}> = ({ id, text, checked, onClick }) => {
-  const [foo, setFoo] = useInputState(checked);
+}> = ({ id, text, checked: initialChecked, onClick }) => {
+  const [checked, setChecked] = useState(initialChecked);
 
   return (
     <Group position="apart">
       <Group p={8} spacing={12}>
         <Checkbox
           radius="lg"
-          checked={foo}
-          onChange={async () => {
+          checked={checked}
+          onChange={async ({ currentTarget: { checked } }) => {
+            setChecked(checked);
             await fetch(`/api/todo/${id}`, {
               method: "PUT",
               headers: { "Content-type": "application/json" },
-              body: JSON.stringify(!foo),
+              body: JSON.stringify(checked),
             });
-            setFoo(!foo);
           }}
         />
         <Text>{text}</Text>
