@@ -186,27 +186,29 @@ const Home: NextPage = () => {
           height={56}
           withBorder={false}
           px={24}
-          className="flex items-center justify-between"
+          className="flex justify-center"
         >
-          <Space w={36} />
-          <Text size={24} color="pink" weight={700}>
-            Todo
-          </Text>
-          <Menu>
-            <Menu.Target>
-              <Avatar src={user?.profileImageUrl} size={36} />
-            </Menu.Target>
-            <Menu.Dropdown>
-              <Menu.Item
-                color="red"
-                onClick={() => {
-                  signOut();
-                }}
-              >
-                ログアウト
-              </Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
+          <Group position="apart" className="max-w-5xl flex-grow">
+            <Space w={36} />
+            <Text size={24} color="pink" weight={700}>
+              Todo
+            </Text>
+            <Menu>
+              <Menu.Target>
+                <Avatar src={user?.profileImageUrl} size={36} />
+              </Menu.Target>
+              <Menu.Dropdown>
+                <Menu.Item
+                  color="red"
+                  onClick={() => {
+                    signOut();
+                  }}
+                >
+                  ログアウト
+                </Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
+          </Group>
         </Header>
       }
     >
