@@ -48,7 +48,13 @@ const Todo: FC<{
             });
           }}
         />
-        <Text>{text}</Text>
+        {checked ? (
+          <Text c="dimmed" td="line-through">
+            {text}
+          </Text>
+        ) : (
+          <Text>{text}</Text>
+        )}
       </Group>
       <CloseButton onClick={onClick} />
     </Group>
