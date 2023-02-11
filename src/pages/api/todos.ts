@@ -17,7 +17,12 @@ const handler = requireAuth(
       )?.emailAddress || "foo@example.com";
 
     if (method === "GET") {
-      return status(200).json(await prisma.todo.findMany({ where: { email } }));
+      return status(200).json(
+        await prisma.todo.findMany({
+          where: { email },
+          orderBy: { createdAt: "asc" },
+        })
+      );
     } else if (method === "POST") {
       return status(201).json(
         await prisma.todo.create({
