@@ -211,8 +211,9 @@ const Home: NextPage = () => {
           </Group>
         </Header>
       }
+      classNames={{ main: "flex justify-center" }}
     >
-      <Stack>
+      <Stack className="max-w-5xl flex-grow">
         <Todos />
       </Stack>
     </AppShell>
