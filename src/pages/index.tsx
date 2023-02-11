@@ -1,13 +1,13 @@
-import {
+import type {
   ChangeEventHandler,
   FC,
   FocusEventHandler,
   MouseEventHandler,
-  useState,
 } from "react";
 import type { NextPage } from "next";
 import type { Todo } from "@prisma/client";
 
+import { useState } from "react";
 import {
   AppShell,
   Avatar,

@@ -10,10 +10,12 @@ const handler = requireAuth(
     { method, body: text, auth: { userId } }: RequireAuthProp<NextApiRequest>,
     { status }: NextApiResponse
   ) => {
-    const user = await users.getUser(userId);
+    const { emailAddresses, primaryEmailAddressId } = await users.getUser(
+      userId
+    );
     const email =
-      user.emailAddresses.find(
-        (emailAddress) => emailAddress.id === user.primaryEmailAddressId
+      emailAddresses.find(
+        (emailAddress) => emailAddress.id === primaryEmailAddressId
       )?.emailAddress || "foo@example.com";
 
     if (method === "GET") {
