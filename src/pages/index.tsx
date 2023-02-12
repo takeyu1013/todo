@@ -22,7 +22,13 @@ import {
   TextInput,
 } from "@mantine/core";
 import { useInputState } from "@mantine/hooks";
-import { useClerk, useUser } from "@clerk/nextjs";
+import {
+  RedirectToSignIn,
+  SignedIn,
+  SignedOut,
+  useClerk,
+  useUser,
+} from "@clerk/nextjs";
 import useSWR from "swr";
 
 const Todo: FC<{
@@ -180,43 +186,50 @@ const Home: NextPage = () => {
   const { signOut } = useClerk();
 
   return (
-    <AppShell
-      header={
-        <Header
-          height={56}
-          withBorder={false}
-          px={24}
-          className="flex justify-center"
+    <>
+      <SignedIn>
+        <AppShell
+          header={
+            <Header
+              height={56}
+              withBorder={false}
+              px={24}
+              className="flex justify-center"
+            >
+              <Group position="apart" className="max-w-5xl flex-grow">
+                <Space w={36} />
+                <Text size={24} color="pink" weight={700}>
+                  Todo
+                </Text>
+                <Menu>
+                  <Menu.Target>
+                    <Avatar src={user?.profileImageUrl} size={36} />
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    <Menu.Item
+                      color="red"
+                      onClick={() => {
+                        signOut();
+                      }}
+                    >
+                      ログアウト
+                    </Menu.Item>
+                  </Menu.Dropdown>
+                </Menu>
+              </Group>
+            </Header>
+          }
+          classNames={{ main: "flex justify-center" }}
         >
-          <Group position="apart" className="max-w-5xl flex-grow">
-            <Space w={36} />
-            <Text size={24} color="pink" weight={700}>
-              Todo
-            </Text>
-            <Menu>
-              <Menu.Target>
-                <Avatar src={user?.profileImageUrl} size={36} />
-              </Menu.Target>
-              <Menu.Dropdown>
-                <Menu.Item
-                  color="red"
-                  onClick={() => {
-                    signOut();
-                  }}
-                >
-                  ログアウト
-                </Menu.Item>
-              </Menu.Dropdown>
-            </Menu>
-          </Group>
-        </Header>
-      }
-      classNames={{ main: "flex justify-center" }}
-    >
-      <Stack className="max-w-5xl flex-grow">
-        <Todos />
-      </Stack>
-    </AppShell>
+          <Stack className="max-w-5xl flex-grow">
+            <Todos />
+          </Stack>
+        </AppShell>
+      </SignedIn>
+      <SignedOut>
+        <RedirectToSignIn />
+      </SignedOut>
+    </>
   );
 };
 
