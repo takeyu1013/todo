@@ -22,13 +22,7 @@ import {
   TextInput,
 } from "@mantine/core";
 import { useInputState } from "@mantine/hooks";
-import {
-  RedirectToSignIn,
-  SignedIn,
-  SignedOut,
-  useClerk,
-  useUser,
-} from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignIn, useClerk, useUser } from "@clerk/nextjs";
 import useSWR from "swr";
 
 const Todo: FC<{
@@ -227,7 +221,15 @@ const Home: NextPage = () => {
         </AppShell>
       </SignedIn>
       <SignedOut>
-        <RedirectToSignIn />
+        <SignIn
+          appearance={{
+            layout: {
+              socialButtonsVariant: "iconButton",
+              socialButtonsPlacement: "bottom",
+            },
+          }}
+          signUpUrl="/sign-up"
+        />
       </SignedOut>
     </>
   );
